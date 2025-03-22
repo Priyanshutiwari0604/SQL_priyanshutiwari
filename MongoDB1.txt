@@ -1,0 +1,83 @@
+Q1: Find all documents where the field "item" is "Mochas". 
+
+Ans:- db.sales.find({ item: "Mochas" }); 
+
+Q2: Find all items with a price less than 15. 
+
+Ans:- db.sales.find({ price: { $lt: 15 } }); 
+
+Q3: Find items with a price either less than 10 or greater than 20. 
+
+Ans:- db.sales.find({ $or: [{ price: { $lt: 10 } }, { price: { $gt: 20 } }] }); 
+
+Q4: Find all documents where the "quantity" field exists. 
+
+Ans:- db.sales.find({ quantity: { $exists: true } }); 
+
+Q5: Find all documents where the "color" array contains the value "white". 
+
+Ans:- db.sales.find({ color: "white" }); 
+
+Q6: Update the RAM of the user named "xTablet" to 24. 
+
+Ans:- db.products.updateOne({ name: "xTablet" }, { $set: { "spec.ram": 24 } }); 
+
+Q7: Find all products and return only the "spec" field. 
+
+Ans:- db.products.find({}, { spec: 1, _id: 0 }); 
+
+Q8: Find all products and sort them by price in descending order. 
+
+Ans:- db.products.find().sort({ price: -1 }); 
+
+Q9: Find the first 2 products, skipping the first one. 
+
+Ans:- db.products.find().skip(1).limit(2); 
+
+Q10: Find all users whose name starts with "S" and have a price greater than 700. 
+
+Ans:- db.products.find({ name: /^S/, price: { $gt: 700 } }); 
+
+Q11: Calculate the total price of all items. 
+
+Ans:- db.products.aggregate([ 
+{ 
+$group: { 
+_id: null, // Group all documents together 
+totalPrice: { $sum: "$price" } // Sum the "price" field 
+} 
+} 
+]); 
+
+Q12: Project only the "size" field for each item. 
+
+Ans:- db.products.find({}, { "spec.screen": 1, _id: 0 }); 
+
+Q13: Find items with "tail size" and group them by item name. 
+
+Ans:- db.products.aggregate([ 
+  { $match: { "spec.screen": "tail size" } }, // Match items with "tail size" screen 
+  { 
+    $group: { 
+      _id: "$name", // Group by item name 
+      count: { $sum: 1 } // Count occurrences 
+    } 
+  } 
+]); 
+ 
+Q14: Find the second item when sorted in ascending order. 
+
+Ans:- db.products.find().sort({ price: 1 }).skip(1).limit(1); 
+ 
+Q15 : how do you group by items and calculate the total number of items and average price in a 
+single aggregation ? 
+Ans:- db.products.aggregate([ 
+  { 
+    $group: { 
+      _id: "$name", // Group by item name 
+      totalItems: { $sum: 1 }, // Count total number of items 
+      averagePrice: { $avg: "$price" } // Calculate average price 
+    } 
+  } 
+]); 
+ 
